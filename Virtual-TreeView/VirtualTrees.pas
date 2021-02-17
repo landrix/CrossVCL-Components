@@ -25172,9 +25172,9 @@ begin
   SetWindowRgn(FPanningWindow, CreateClipRegion, False);
 
   {$ifdef CPUX64}
-  SetWindowLongPtr(FPanningWindow, GWLP_WNDPROC, LONG_PTR(System.Classes.MakeObjectInstance(PanningWindowProc)));
+  SetWindowLongPtr(FPanningWindow, GWLP_WNDPROC, LONG_PTR({$IFDEF MSWINDOWS}System.Classes.{$ENDIF}MakeObjectInstance(PanningWindowProc)));
   {$else}
-  SetWindowLong(FPanningWindow, GWL_WNDPROC, NativeInt(System.Classes.MakeObjectInstance(PanningWindowProc)));
+  SetWindowLong(FPanningWindow, GWL_WNDPROC, NativeInt({$IFDEF MSWINDOWS}System.Classes.{$ENDIF}MakeObjectInstance(PanningWindowProc)));
   {$endif CPUX64}
   ShowWindow(FPanningWindow, SW_SHOWNOACTIVATE);
 
@@ -25209,7 +25209,7 @@ begin
     {$endif CPUX64}
     DestroyWindow(FPanningWindow);
     if Instance <> @DefWindowProc then
-      System.Classes.FreeObjectInstance(Instance);
+      {$IFDEF MSWINDOWS}System.Classes.{$ENDIF}FreeObjectInstance(Instance);
     FPanningWindow := 0;
     FPanningImage.Free;
     FPanningImage := nil;
@@ -25622,7 +25622,7 @@ const // Region identifiers for GetRandomRgn
   APIRGN = 3;
   SYSRGN = 4;
 
-function GetRandomRgn(DC: HDC; Rgn: HRGN; iNum: Integer): Integer; stdcall; external 'GDI32.DLL';
+function GetRandomRgn(DC: HDC; Rgn: HRGN; iNum: Integer): Integer; stdcall; external {$IFDEF MSWINDOWS} 'GDI32.DLL' {$ELSE} CrossVclLib {$ENDIF};
 
 procedure TBaseVirtualTree.UpdateWindowAndDragImage(const Tree: TBaseVirtualTree; TreeRect: TRect; UpdateNCArea,
   ReshowDragImage: Boolean);
@@ -31384,7 +31384,7 @@ type
   // needed to handle OLE global memory objects
   TOLEMemoryStream = class(TCustomMemoryStream)
   public
-    function Write(const Buffer; Count: Integer): Integer; override;
+    function Write(const Buffer; Count: Integer): Integer;{$IFDEF MSWINDOWS} override;{$ENDIF}
   end;
 
 //----------------------------------------------------------------------------------------------------------------------

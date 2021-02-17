@@ -481,6 +481,7 @@ end;
 
 //----------------------------------------------------------------------------------------------------------------------
 
+{$IFDEF MSWINDOWS}
 procedure AlphaBlendLineConstant(Source, Destination: Pointer; Count: Integer; ConstantAlpha, Bias: Integer);
 
 // Blends a line of Count pixels from Source to Destination using a constant alpha value.
@@ -613,7 +614,6 @@ asm
         POP     ESI
 end;
 {$endif CPUX64}
-
 //----------------------------------------------------------------------------------------------------------------------
 
 procedure AlphaBlendLinePerPixel(Source, Destination: Pointer; Count, Bias: Integer);
@@ -1018,6 +1018,7 @@ asm
         JNZ     @1
 end;
 {$endif CPUX64}
+{$ENDIF}
 
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -1037,6 +1038,7 @@ procedure AlphaBlend(Source, Destination: HDC; R: TRect; Target: TPoint; Mode: T
 // CAUTION: This procedure does not check whether MMX instructions are actually available! Call it only if MMX is really
 //          usable.
 
+{$IFDEF MSWINDOWS}
 var
   Y: Integer;
   SourceRun,
@@ -1048,10 +1050,11 @@ var
   SourceHeight,
   DestWidth,
   DestHeight: Integer;
-
+{$ENDIF}
 begin
   if not IsRectEmpty(R) then
   begin
+    {$IFDEF MSWINDOWS}
     // Note: it is tempting to optimize the special cases for constant alpha 0 and 255 by just ignoring soure
     //       (alpha = 0) or simply do a blit (alpha = 255). But this does not take the bias into account.
     case Mode of
@@ -1123,6 +1126,7 @@ begin
           EMMS;
         end;
     end;
+    {$ENDIF}
   end;
 end;
 
