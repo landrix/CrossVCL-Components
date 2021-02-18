@@ -1,5 +1,10 @@
 # CrossVCL-Components
 
+## Current Delphi IDE
+
+- Delphi 10.4
+- macOS 64 Bit MacOSX 10.15.4
+
 ## Virtual-TreeView
 
 Based on commit
