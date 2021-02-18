@@ -36,6 +36,7 @@
 /Win32
 /Win64
 /OSX32
+OSX64
 /__history
 *.bak
 *.Patch
