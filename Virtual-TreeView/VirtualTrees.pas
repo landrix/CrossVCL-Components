@@ -77,6 +77,7 @@ uses
   Winapi.Windows, Winapi.oleacc, Winapi.Messages, System.SysUtils, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.ImgList, Winapi.ActiveX, Vcl.StdCtrls, System.Classes,
   Vcl.Menus, Vcl.Printers, System.Types, Winapi.CommCtrl, Vcl.Themes, Winapi.UxTheme,
+  {$IFNDEF MSWINDOWS}Posix.Unistd,{$ENDIF}
   Winapi.ShlObj, System.UITypes, System.Generics.Collections;
 type
 {$IFDEF VT_FMX}
@@ -6252,7 +6253,9 @@ begin
         // Header is painted in this part only so when you use this routine and want
         // to capture the header in backup image, this flag should be ON.
         // For the non-client area we only need the visible region of the window as limit for painting.
+        {$IFDEF MSWINDOWS}
         SelectClipRgn(Canvas.Handle, VisibleRegion);
+        {$ENDIF}
         // Since WM_PRINT cannot be given a position where to draw we simply move the window origin and
         // get the same effect.
         GetWindowRect(Tree.Handle, ClipRect);
@@ -6260,7 +6263,9 @@ begin
         Tree.Perform(WM_PRINT, WPARAM(Canvas.Handle), PRF_NONCLIENT);
         SetCanvasOrigin(Canvas, 0, 0);
       end;
+      {$IFDEF MSWINDOWS}
       SelectClipRgn(Canvas.Handle, 0);
+      {$ENDIF}
 
       if ReshowDragImage then
       begin
@@ -9001,9 +9006,10 @@ procedure TVirtualTreeColumns.PaintHeader(DC: HDC; R: TRect; HOffset: Integer);
 var
   VisibleFixedWidth: Integer;
   RTLOffset: Integer;
+  Canvas: TCanvas;
 
   procedure PaintFixedArea;
-  
+
   begin
     if VisibleFixedWidth > 0 then
       PaintHeader(FHeaderBitmap.Canvas,
@@ -9013,10 +9019,16 @@ var
 
 begin
   // Adjust size of the header bitmap
+  {$IFDEF MSWINDOWS}
   with TWithSafeRect(FHeader.Treeview.FHeaderRect) do
   begin
     FHeaderBitmap.SetSize(Max(Right, R.Right - R.Left), Bottom);
   end;
+  Canvas := FHeaderBitmap.Canvas;
+  {$ELSE}
+  Canvas := TCanvas.Create;
+  Canvas.Handle := DC;
+  {$ENDIF}
 
   VisibleFixedWidth := GetVisibleFixedWidth;
 
@@ -9025,22 +9037,27 @@ begin
     RTLOffset := FHeader.Treeview.ComputeRTLOffset
   else
     RTLOffset := 0;
-    
+
   if RTLOffset = 0 then
     PaintFixedArea;
 
   // Paint the floating part of the header.
-  PaintHeader(FHeaderBitmap.Canvas,
+  PaintHeader(Canvas,
     Rect(VisibleFixedWidth - HOffset, 0, R.Right + VisibleFixedWidth - HOffset, R.Bottom - R.Top),
     Point(R.Left + VisibleFixedWidth, R.Top), RTLOffset);
 
   // In case of right-to-left directionality we paint the fixed part last.
   if RTLOffset <> 0 then
     PaintFixedArea;
-  
+
   // Blit the result to target.
+  {$IFDEF MSWINDOWS}
   with TWithSafeRect(R) do
     BitBlt(DC, Left, Top, Right - Left, Bottom - Top, FHeaderBitmap.Canvas.Handle, Left, Top, SRCCOPY);
+  {$ELSE}
+  Canvas.Handle := 0;
+  Canvas.DisposeOf;
+  {$ENDIF}
 end;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -9456,9 +9473,9 @@ begin
                                     Min(TargetRect.Right, MaxX), TargetRect.Bottom));
 
       PaintColumnHeader(Run, TargetRect);
-
+      {$IFDEF MSWINDOWS}
       SelectClipRgn(Handle, 0);
-      
+      {$ENDIF}
       TargetRect.Left := TargetRect.Right;
       Run := GetNextVisibleColumn(Run);
     end;
@@ -11464,7 +11481,7 @@ begin
     if Dummy > -1 then
     begin
       // Seek back to undo the read operation if this is an old stream format.
-      Seek(-SizeOf(Dummy), soFromCurrent);
+      Seek(-SizeOf(Dummy), {$IFDEF MSWINDOWS}soFromCurrent{$ELSE}soCurrent{$ENDIF});
       Version := -1;
     end
     else // Read version number if this is a "versionized" format.
@@ -30844,7 +30861,9 @@ begin
                     else
                       NextColumn := GetNextVisibleColumn(PaintInfo.Column);
 
+                    {$IFDEF MSWINDOWS}
                     SelectClipRgn(PaintInfo.Canvas.Handle, 0);
+                    {$ENDIF}
                     // Stop column loop if there are no further columns in the given window.
                     if (PaintInfo.CellRect.Left >= Window.Right) or (NextColumn = InvalidColumn) then
                       Break;
@@ -31384,12 +31403,12 @@ type
   // needed to handle OLE global memory objects
   TOLEMemoryStream = class(TCustomMemoryStream)
   public
-    function Write(const Buffer; Count: Integer): Integer;{$IFDEF MSWINDOWS} override;{$ENDIF}
+    function Write(const Buffer; Count: {$IFDEF MSWINDOWS}Integer{$ELSE}System.Longint{$ENDIF}): {$IFDEF MSWINDOWS}Integer{$ELSE}System.Longint{$ENDIF}; override;
   end;
 
 //----------------------------------------------------------------------------------------------------------------------
 
-function TOLEMemoryStream.Write(const Buffer; Count: Integer): Integer;
+function TOLEMemoryStream.Write(const Buffer; Count: {$IFDEF MSWINDOWS}Integer{$ELSE}System.Longint{$ENDIF}): {$IFDEF MSWINDOWS}Integer{$ELSE}System.Longint{$ENDIF};
 
 begin
   raise EStreamError.CreateRes(PResStringRec(@SCantWriteResourceStreamError));

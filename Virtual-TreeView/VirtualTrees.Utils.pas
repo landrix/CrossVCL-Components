@@ -204,11 +204,12 @@ end;
 //----------------------------------------------------------------------------------------------------------------------
 
 procedure ClipCanvas(Canvas: TCanvas; ClipRect: TRect; VisibleRegion: HRGN = 0);
-
+{$IFDEF MSWINDOWS}
 var
   ClipRegion: HRGN;
-
+{$ENDIF}
 begin
+  {$IFDEF MSWINDOWS}
   // Regions expect their coordinates in device coordinates, hence we have to transform the region rectangle.
   LPtoDP(Canvas.Handle, ClipRect, 2);
   ClipRegion := CreateRectRgnIndirect(ClipRect);
@@ -216,6 +217,7 @@ begin
     CombineRgn(ClipRegion, ClipRegion, VisibleRegion, RGN_AND);
   SelectClipRgn(Canvas.Handle, ClipRegion);
   DeleteObject(ClipRegion);
+  {$ENDIF}
 end;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -434,7 +436,7 @@ end;
 
 //----------------------------------------------------------------------------------------------------------------------
 
-
+{$IFDEF MSWINDOWS}
 function CalculateScanline(Bits: Pointer; Width, Height, Row: Integer): Pointer;
 
 // Helper function to calculate the start address for the given row.
@@ -481,7 +483,6 @@ end;
 
 //----------------------------------------------------------------------------------------------------------------------
 
-{$IFDEF MSWINDOWS}
 procedure AlphaBlendLineConstant(Source, Destination: Pointer; Count: Integer; ConstantAlpha, Bias: Integer);
 
 // Blends a line of Count pixels from Source to Destination using a constant alpha value.
@@ -1126,6 +1127,8 @@ begin
           EMMS;
         end;
     end;
+    {$ELSE}
+    FillRectWithAlpha(Destination, R, Bias, ConstantAlpha);
     {$ENDIF}
   end;
 end;
