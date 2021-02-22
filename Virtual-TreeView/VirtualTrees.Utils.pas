@@ -1297,15 +1297,21 @@ end;
 //----------------------------------------------------------------------------------------------------------------------
 
 function IsMouseCursorVisible(): Boolean;
+{$IFDEF MSWINDOWS}
 var
   CI: TCursorInfo;
+{$ENDIF}
 begin
+  {$IFDEF MSWINDOWS}
   CI.cbSize := SizeOf(CI);
   Result := GetCursorInfo(CI) and (CI.flags = CURSOR_SHOWING);
   // 0                     Hidden
   // CURSOR_SHOWING (1)    Visible
   // CURSOR_SUPPRESSED (2) Touch/Pen Input (Windows 8+)
   // https://msdn.microsoft.com/en-us/library/windows/desktop/ms648381(v=vs.85).aspx
+  {$ELSE}
+  Result := true;
+  {$ENDIF}
 end;
 
 //----------------------------------------------------------------------------------------------------------------------
