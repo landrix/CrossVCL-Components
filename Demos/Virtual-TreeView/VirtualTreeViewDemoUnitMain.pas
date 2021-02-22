@@ -43,6 +43,7 @@ begin
   VirtualStringTree1.RootNodeCount := 8;
   VirtualStringTree1.TabOrder := 0;
   VirtualStringTree1.OnGetText := VirtualStringTree1GetText;
+  VirtualStringTree1.Header.Options := VirtualStringTree1.Header.Options + [hoVisible];
   with VirtualStringTree1.Header.Columns.Add do
   begin
     Position := 0;

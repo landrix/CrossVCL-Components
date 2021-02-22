@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{28BBB8A4-6BDF-4993-B755-CA15AF02B144}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="Virtual-TreeView-Advanced\Advanced.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Virtual-TreeView\VirtualTreeViewDemo.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="Advanced">
+        <MSBuild Projects="Virtual-TreeView-Advanced\Advanced.dproj"/>
+    </Target>
+    <Target Name="Advanced:Clean">
+        <MSBuild Projects="Virtual-TreeView-Advanced\Advanced.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Advanced:Make">
+        <MSBuild Projects="Virtual-TreeView-Advanced\Advanced.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="VirtualTreeViewDemo">
+        <MSBuild Projects="Virtual-TreeView\VirtualTreeViewDemo.dproj"/>
+    </Target>
+    <Target Name="VirtualTreeViewDemo:Clean">
+        <MSBuild Projects="Virtual-TreeView\VirtualTreeViewDemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="VirtualTreeViewDemo:Make">
+        <MSBuild Projects="Virtual-TreeView\VirtualTreeViewDemo.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="Advanced;VirtualTreeViewDemo"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="Advanced:Clean;VirtualTreeViewDemo:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="Advanced:Make;VirtualTreeViewDemo:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

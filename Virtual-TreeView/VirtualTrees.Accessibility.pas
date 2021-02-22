@@ -362,6 +362,7 @@ begin
   Result := E_INVALIDARG;
   ppdispParent := nil;
 
+  {$IFDEF MSWINDOWS}
   // Addition - Simon Moscrop 7/5/2009
   if (FVirtualTree.HandleAllocated) then
   begin
@@ -374,6 +375,7 @@ begin
     hParent := FVirtualTree.Handle;
     RESULT := AccessibleObjectFromWindow(hParent,CHILDID_SELF,IID_IAccessible,pointeR(ppDispParent));
   end;
+  {$ENDIF}
 end;
 
 //----------------------------------------------------------------------------------------------------------------------
