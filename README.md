@@ -1,6 +1,6 @@
 # CrossVCL-Components
 
-Modified UI-Components for CrossVCL
+Modified UI-Components for CrossVCL 1.25
 
 https://www.crossvcl.com
 
