@@ -1,4 +1,4 @@
-program Advanced;
+program VirtualTreeViewAdvanced;
 
 {$R 'ExtraRes.res' 'ExtraRes.rc'}
 
