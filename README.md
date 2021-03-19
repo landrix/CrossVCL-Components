@@ -1,6 +1,6 @@
 # CrossVCL-Components
 
-Modified UI-Components for CrossVCL 1.27
+Modified UI-Components for CrossVCL 1.29
 
 https://www.crossvcl.com
 
@@ -11,9 +11,14 @@ https://www.crossvcl.com
 
 ## Virtual-TreeView
 
-Based on commit 2021-03-05
+https://github.com/JAM-Software/Virtual-TreeView
 
-https://github.com/JAM-Software/Virtual-TreeView/commit/8f5bd5e1fd68610285de757195d3f15d2a2fe111
+Last sync 2021-03-19
+
+Based on commit
+
+https://github.com/JAM-Software/Virtual-TreeView/commit/e67bf379c7b089d900cae19d135a0f97ae6b5c51
 
 ## License
+
 CrossVCL-Components is published under a double license: MPL 1.1 and LGPL 2.1 with static linking exception as described here: http://wiki.freepascal.org/modified_LGPL
