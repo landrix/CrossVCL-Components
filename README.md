@@ -13,11 +13,11 @@ https://www.crossvcl.com
 
 https://github.com/JAM-Software/Virtual-TreeView
 
-Last sync 2021-03-19
+Last sync 2021-03-31
 
 Based on commit
 
-https://github.com/JAM-Software/Virtual-TreeView/commit/e67bf379c7b089d900cae19d135a0f97ae6b5c51
+https://github.com/JAM-Software/Virtual-TreeView/commit/475f919fc8b4d219c254c1f609053ba3cb6391ce
 
 ## License
 
