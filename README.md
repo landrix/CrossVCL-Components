@@ -9,15 +9,15 @@ https://www.crossvcl.com
 - Delphi 10.4.2
 - macOS 64 Bit MacOSX 10.15.4
 
-## Virtual-TreeView
+## Virtual-TreeView 7.5
 
 https://github.com/JAM-Software/Virtual-TreeView
 
-Last sync 2021-03-31
+Last sync 2021-04-01
 
 Based on commit
 
-https://github.com/JAM-Software/Virtual-TreeView/commit/475f919fc8b4d219c254c1f609053ba3cb6391ce
+https://github.com/JAM-Software/Virtual-TreeView/commit/a3f5d19ae498d323cc7aec7fd686403101963a60
 
 ## License
 
